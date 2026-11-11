@@ -1,0 +1,43 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PRISMA_CLI_BINARY_TARGETS=native,debian-openssl-1.1.x
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run worker
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PRISMA_CLI_BINARY_TARGETS=native,debian-openssl-1.1.x
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    # La etiqueta !override obliga a borrar los puertos del archivo base
+    ports: !override []
+
+  redis:
+    # La etiqueta !override obliga a borrar los puertos del archivo base
+    ports: !override []
