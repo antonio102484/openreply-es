@@ -46,7 +46,7 @@ export function renderMessageWithoutLink({
   commenterName?: string | null;
 }) {
   return message
-    .replace(/\{username\}/gi, commenterName ?? "there")
+    .replace(/\{username\}/gi, commenterName ?? "bella")
     .replace(/\s*\{link\}\s*/gi, " ")
     .trim();
 }
